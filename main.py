@@ -9,12 +9,10 @@ from player_ball_assigner.player_ball_assigner import *
 import os
 import pickle
 
-# Import sport
-# git+https://github.com/roboflow/sports.git
 
 def process(video_path, model_path="models/yolov8x-football.pt", 
             model_keypoints_path="models/key_points_pitch_ver2.pt"):
-    # frames = read_video("inputs/55c9d1_1.mp4")
+
     frames = read_video(video_path)
 
     tracker = Tracker(model_path, model_keypoints_path)
@@ -40,10 +38,10 @@ def process(video_path, model_path="models/yolov8x-football.pt",
     team_assigner.assign_team_color(frames[10], tracks["players"][10])
 
     for frame_number, player_track in enumerate(tracks["players"]):
-        player_crops = team_assigner.get_player_crops(frames[frame_number], 
-                                                      player_track, 
-                                                      frame_number, 
-                                                      tracks)
+        team_assigner.get_player_crops(frames[frame_number], 
+                                        player_track, 
+                                        frame_number, 
+                                        tracks)
         # for player_id, track in player_track.items():
         #     if player_id == -1:
         #         continue
