@@ -5,6 +5,7 @@ import pandas as pd
 import cv2
 import numpy as np
 import supervision as sv
+import gc
 from utils.calculator import *
 
 class Tracker:
@@ -108,8 +109,11 @@ class Tracker:
         ball_position = [x.get(1, {}).get("bbox", []) for x in ball_position]
         df_ball_position = pd.DataFrame(ball_position, columns=["x1", "y2", "x2", "y2"])
 
-        df_ball_position = df_ball_position.interpolate()
-        df_ball_position = df_ball_position.bfill()
+        df_ball_position = df_ball_position.interpolate(limit=5)
+        # Backward fill
+        # df_ball_position = df_ball_position.bfill()
+        # Forward fill
+        df_ball_position = df_ball_position.ffill()
 
         ball_position = [{1: {"bbox": x}} for x in df_ball_position.to_numpy().tolist()]
 
@@ -226,3 +230,4 @@ class Tracker:
         del self.model
         del self.model_keypoints
         del self.tracker
+        gc.collect()

@@ -1,6 +1,7 @@
 from sklearn.cluster import KMeans
 from sports.common.team import TeamClassifier
 import numpy as np
+import gc
 from utils import *
 
 class TeamAssigner:
@@ -141,3 +142,4 @@ class TeamAssigner:
         del self.team_classifier
         del self.player_team_dict
         del self.team_color
+        gc.collect()

@@ -35,21 +35,38 @@ if ! command -v gdown &> /dev/null; then
     pip install gdown
 fi
 
-FOLDER_ID="1mTlpX9Y3IFmfLAMZV82Iw--xsrbquBou"
-# Thư mục đích là thư mục models trong football-project-v1
-MODEL_DIR="/models"
+# Tải yolov8x-football.pt từ drive
+FILE_URL_MODEL_FB="https://drive.google.com/uc?id=1JS8hpKHkERWGEsIQK7UPCg16O_5IFRmN"
+FILE_NAME_MODEL_FB="yolov8x-football.pt"
+INPUT_DIR_MODEL_FB="/models"
 
 # Kiểm tra nếu chưa tồn tại thì tạo mới
-if [ ! -d "$MODEL_DIR" ]; then
-    mkdir "$MODEL_DIR"
+if [ ! -d "$INPUT_DIR_MODEL_FB" ]; then
+    mkdir "$INPUT_DIR_MODEL_FB" ]
 fi
 
-# Tải các file từ Google Drive
-gdown --folder "https://drive.google.com/drive/folders/$FOLDER_ID" -O "$MODEL_DIR"
-echo "Tải dữ liệu thành công! Dữ liệu sẽ được lưu trong thư mục models."
+# Tải file từ Google Drive
+echo "Bắt đầu tải yolov8x-football..."
+gdown -O "$INPUT_DIR_MODEL_FB/$FILE_NAME_MODEL_FB" "$FILE_URL_MODEL_FB"
+echo "Tải model thành công! Model sẽ được lưu trong thư mục models."
+
+# Tải key_points_pitch_ver2.pt từ drive
+FILE_URL_MODEL_KP="https://drive.google.com/uc?id=1ul_FCU03J2PYiup-WTgcW5YcUHlDrmLY"
+FILE_NAME_MODEL_KP="key_points_pitch_ver2.pt"
+INPUT_DIR_MODEL_KP="/models"
+
+# Kiểm tra nếu chưa tồn tại thì tạo mới
+if [ ! -d "$INPUT_DIR_MODEL_KP" ]; then
+    mkdir "$INPUT_DIR_MODEL_KP" ]
+fi
+
+# Tải file từ Google Drive
+echo "Bắt đầu tải input..."
+gdown -O "$INPUT_DIR_MODEL_KP/$FILE_NAME_MODEL_KP" "$FILE_URL_MODEL_KP"
+echo "Tải model thành công! Model sẽ được lưu trong thư mục models."
 
 
-# Đặt ID của tệp Google Drive và tên tệp muốn tải
+# Tải video outputs từ drive
 FILE_URL="https://drive.google.com/uc?id=12TqauVZ9tLAv8kWxTTBFWtgt2hNQ4_ZF"
 FILE_NAME="0bfacc_0.mp4"
 INPUT_DIR="/inputs"
