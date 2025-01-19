@@ -43,7 +43,7 @@ class Tracker:
             "players": [],
             "referees": [],
             "ball": [],
-            # "goalkeeper": []
+            "goalkeeper": []
         }
         
         for frame_number, (detection, detection_keypoints) in enumerate(zip(detections, detections_keypoints)):
@@ -59,22 +59,29 @@ class Tracker:
             tracks["ball"].append({})
             tracks["players"].append({})
             tracks["referees"].append({})
+            tracks["goalkeeper"].append({})
 
-           # Update tracking
+            # Add keypoint to tracks
             tracks["ball"][frame_number][-1] = {"pitch":detection_keypoints_sv}
             tracks["players"][frame_number][-1] = {"pitch":detection_keypoints_sv}
             tracks["referees"][frame_number][-1] = {"pitch":detection_keypoints_sv}
+            tracks["goalkeeper"][frame_number][-1] = {"pitch":detection_keypoints_sv}
 
+           # Update tracking
             for frame_detection in detection_tracks:
                 bbox = frame_detection[0].tolist()
                 cls_id = frame_detection[3]
                 track_id = frame_detection[4]
 
                 if cls_id == cls_name_invert["player"]:
-                    tracks["players"][frame_number][track_id] = {"bbox":bbox} 
+                    tracks["players"][frame_number][track_id] = {"bbox":bbox}
 
                 if cls_id == cls_name_invert["referee"]:
-                    tracks["referees"][frame_number][track_id] = {"bbox":bbox} 
+                    tracks["referees"][frame_number][track_id] = {"bbox":bbox}
+                
+                if cls_id == cls_name_invert["goalkeeper"]:
+                    tracks["goalkeeper"][frame_number][track_id] = {"bbox":bbox}
+
             
             for frame_detect in detection_sv:
                 bbox = frame_detect[0].tolist()
@@ -89,7 +96,7 @@ class Tracker:
         for object, object_tracks in tracks.items():
             for frame_number, track in enumerate(object_tracks):
                 for track_id, track_data in track.items():
-                    if track_id == -1:
+                    if track_id == -1 or track_id == -2:
                         continue
                     bbox = track_data["bbox"]
                     if object == "ball":

@@ -1,6 +1,7 @@
 from sklearn.cluster import KMeans
 from sports.common.team import TeamClassifier
 import numpy as np
+from utils import *
 
 class TeamAssigner:
     def __init__(self):
@@ -8,7 +9,6 @@ class TeamAssigner:
         self.player_team_dict = {}
         self.team_classifier = TeamClassifier(device="cuda")
 
-    
     def assign_team_color(self, frame, player_detection):
         player_colors = []
         player_crops = []
@@ -47,7 +47,6 @@ class TeamAssigner:
         player_color = kmeans.cluster_centers_[player_cluster]
 
         return player_color, image
-
     
     def get_clustering_model(self, image):
         
@@ -90,23 +89,55 @@ class TeamAssigner:
             team = detect_team_id[i] + 1
             if player_id in self.player_team_dict:
                 history_team = self.player_team_dict[player_id]
-                tracks["players"][frame_number][player_id]["team"] = history_team
-                tracks["players"][frame_number][player_id]["team_color"] = self.team_color[history_team]
+                # Nếu muốn giảm check team
+                # tracks["players"][frame_number][player_id]["team"] = history_team
+                # tracks["players"][frame_number][player_id]["team_color"] = self.team_color[history_team]
+                # Check full frame
+                tracks["players"][frame_number][player_id]["team"] = team
+                tracks["players"][frame_number][player_id]["team_color"] = self.team_color[team]
+                self.player_team_dict[player_id] = team
             else:
                 tracks["players"][frame_number][player_id]["team"] = team
                 tracks["players"][frame_number][player_id]["team_color"] = self.team_color[team]
                 self.player_team_dict[player_id] = team
     
+    def resolve_goalkeepers(self, tracks):
+        # Resolve goalkeeper positions based on the detected teams
+        for object, object_tracks in tracks.items():
+            for frame_number, track in enumerate(object_tracks):
+                team1_postions = []
+                team2_postions = []
+                team_color_1 = None
+                team_color_2 = None
+
+                if object == "players":
+                    for track_id, track_data in track.items():
+                        if track_id == -1 or track_id == -2:
+                            continue
+                        if track_data["team"] == 1:
+                            team1_postions.append(track_data["position"])
+                            team_color_1 = track_data["team_color"]
+                        elif track_data["team"] == 2:
+                            team2_postions.append(track_data["position"])
+                            team_color_2 = track_data["team_color"]
+
+                team1_mean = np.mean(np.array(team1_postions), axis=0)
+                team2_mean = np.mean(np.array(team2_postions), axis=0)
+                if object == "goalkeepers":
+                    for track_id, track_data in track.items():
+                        if track_id == -1 or track_id == -2:
+                            continue
+                        goalkeeper_position = track_data["position"]
+                        dist_1 = np.linalg.norm(goalkeeper_position - team1_mean)
+                        dist_2 = np.linalg.norm(goalkeeper_position - team2_mean)
+                        if dist_1 < dist_2:
+                            track_data["team"] = 1
+                            track_data["team_color"] = team_color_1
+                        elif dist_2 < dist_1:
+                            track_data["team"] = 2
+                            track_data["team_color"] = team_color_2
+
     def release(self):
         del self.team_classifier
         del self.player_team_dict
         del self.team_color
-
-
-            
-
-
-
-
-
-
