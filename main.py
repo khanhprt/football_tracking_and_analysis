@@ -35,7 +35,7 @@ def process(video_path, model_path="models/yolov8x-football.pt",
     speed_and_distance.add_speed_and_distance_to_tracks(tracks)
 
     team_assigner = TeamAssigner()
-    team_assigner.assign_team_color(frames[10], tracks["players"][10])
+    team_assigner.assign_team_color(frames[10], tracks["players"][10], tracks)
 
     for frame_number, player_track in enumerate(tracks["players"]):
         team_assigner.get_player_crops(frames[frame_number], 

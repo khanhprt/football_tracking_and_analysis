@@ -10,9 +10,10 @@ class TeamAssigner:
         self.player_team_dict = {}
         self.team_classifier = TeamClassifier(device="cuda")
 
-    def assign_team_color(self, frame, player_detection):
+    def assign_team_color(self, frame, player_detection, tracks):
         player_colors = []
-        player_crops = []
+        # player_crops = []
+        crops = []
 
         for id, player_detection in player_detection.items():
             if id == -1:
@@ -20,12 +21,22 @@ class TeamAssigner:
             bbox = player_detection["bbox"]
             player_color, player_crop = self.get_player_color(frame, bbox)
             player_colors.append(player_color)
-            player_crops.append(player_crop)
-
+            # player_crops.append(player_crop)
+            # crops += player_crop
+        
+        for object_track in tracks["players"]:
+            for frame_number, player_track in enumerate(object_track):
+                for track_id, track in player_track.items():
+                    if track_id == -1:
+                        continue
+                    bbox = track["bbox"]
+                    image = frame[int(bbox[1]):int(bbox[3]), int(bbox[0]):int(bbox[2])]
+                    crops += image
+                    
         kmeans = KMeans(n_clusters=2, init='k-means++', n_init=10)
         kmeans.fit(player_colors)
 
-        self.team_classifier.fit(player_crops)
+        self.team_classifier.fit(crops)
         self.kmeans = kmeans
         self.team_color[2] = kmeans.cluster_centers_[0]
         self.team_color[1] = kmeans.cluster_centers_[1]

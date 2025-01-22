@@ -14,8 +14,8 @@ python3 -m venv myenv
 source myenv/bin/activate
 
 # Tạo 1 thư mục
-mkdir /football-ai
-cd /football-ai
+mkdir ~/football-ai
+cd ~/football-ai
 
 # clone file từ git vào thư mục vừa tạo
 git clone https://github.com/khanhprt/football-project-v1.git
