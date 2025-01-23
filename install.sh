@@ -26,8 +26,8 @@ cd football-project-v1
 # cài đặt các phụ thuộc cần thiết
 pip install -r requirements.txt
 
-yes | pip uninstall opencv-python
-pip install opencv-python-headless
+# yes | pip uninstall opencv-python
+# pip install opencv-python-headless
 
 # Cài đặt gdown nếu chưa có
 if ! command -v gdown &> /dev/null; then

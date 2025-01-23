@@ -8,9 +8,9 @@ def read_video(video_path):
         ret, frame = cap.read()
         if not ret:
             break
-        # if count > 101:
-        #     break
-        # count += 1
+        if count > 350:
+            break
+        count += 1
         frames.append(frame)
     return frames
 

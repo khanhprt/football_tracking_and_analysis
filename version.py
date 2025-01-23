@@ -1,4 +1,5 @@
 import cv2
+import supervision as sv
 
 cap = cv2.VideoCapture("./inputs/ok_798b45_0.mp4")
 count = 0
@@ -14,3 +15,5 @@ while True:
     #     break
 cap.release()
 cv2.destroyAllWindows()
+
+sv.crop_images()

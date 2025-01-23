@@ -9,40 +9,60 @@ class TeamAssigner:
         self.team_color = {}
         self.player_team_dict = {}
         self.team_classifier = TeamClassifier(device="cuda")
+        self._iscompleted = {1: False, 2: False}
 
-    def assign_team_color(self, frame, player_detection, tracks):
-        player_colors = []
-        # player_crops = []
+    def assign_team_color(self, image_crop, team):
+
+        color = self.get_player_color(image_crop)
+        self.team_color[team] = color
+        if team == 1:
+            self._iscompleted[1] = True
+        elif team == 2:
+            self._iscompleted[2] = True
+
+    def assign_team_classifier(self, frames, tracks):
+        # player_colors = []
         crops = []
 
-        for id, player_detection in player_detection.items():
-            if id == -1:
-                continue
-            bbox = player_detection["bbox"]
-            player_color, player_crop = self.get_player_color(frame, bbox)
-            player_colors.append(player_color)
+        # for id, player_detection in player_detection.items():
+        #     if id == -1:
+        #         continue
+
+        #     bbox = player_detection["bbox"]
+        #     player_color, player_crop = self.get_player_color(frame, bbox)
+        #     player_colors.append(player_color)
             # player_crops.append(player_crop)
             # crops += player_crop
         
-        for object_track in tracks["players"]:
-            for frame_number, player_track in enumerate(object_track):
-                for track_id, track in player_track.items():
-                    if track_id == -1:
-                        continue
-                    bbox = track["bbox"]
-                    image = frame[int(bbox[1]):int(bbox[3]), int(bbox[0]):int(bbox[2])]
-                    crops += image
+        for object, object_track in tracks.items():
+            if object != "players":
+                continue
+            for frame_number, track in enumerate(object_track):
+                try:
+                    player_crops = []
+                    for track_id, track_data in track.items():
+                        if track_id == -1:
+                            continue
+                        bbox = track_data["bbox"]
+                        image = frames[frame_number][int(bbox[1]):int(bbox[3]), int(bbox[0]):int(bbox[2])]
+                        player_crops.append(image)
+                    crops += player_crops
+                    player_crops.clear()
+                except Exception as e:
+                    print(frame_number)
+                    print(e)
+                    return
                     
-        kmeans = KMeans(n_clusters=2, init='k-means++', n_init=10)
-        kmeans.fit(player_colors)
+        # kmeans = KMeans(n_clusters=2, init='k-means++', n_init=10)
+        # kmeans.fit(player_colors)
 
         self.team_classifier.fit(crops)
-        self.kmeans = kmeans
-        self.team_color[2] = kmeans.cluster_centers_[0]
-        self.team_color[1] = kmeans.cluster_centers_[1]
+        # self.kmeans = kmeans
+        # self.team_color[1] = kmeans.cluster_centers_[0]
+        # self.team_color[2] = kmeans.cluster_centers_[1]
     
-    def get_player_color(self, frame, bbox):
-        image = frame[int(bbox[1]):int(bbox[3]), int(bbox[0]):int(bbox[2])]
+    def get_player_color(self, image):
+        # image = frame[int(bbox[1]):int(bbox[3]), int(bbox[0]):int(bbox[2])]
 
         top_half_image = image[0:int(image.shape[0]/2), :]
 
@@ -58,7 +78,7 @@ class TeamAssigner:
 
         player_color = kmeans.cluster_centers_[player_cluster]
 
-        return player_color, image
+        return player_color
     
     def get_clustering_model(self, image):
         
@@ -99,19 +119,24 @@ class TeamAssigner:
         for i in range(len(id_in_frame)):
             player_id = id_in_frame[i]
             team = detect_team_id[i] + 1
-            if player_id in self.player_team_dict:
-                history_team = self.player_team_dict[player_id]
-                # Nếu muốn giảm check team
-                # tracks["players"][frame_number][player_id]["team"] = history_team
-                # tracks["players"][frame_number][player_id]["team_color"] = self.team_color[history_team]
-                # Check full frame
-                tracks["players"][frame_number][player_id]["team"] = team
-                tracks["players"][frame_number][player_id]["team_color"] = self.team_color[team]
-                self.player_team_dict[player_id] = team
-            else:
-                tracks["players"][frame_number][player_id]["team"] = team
-                tracks["players"][frame_number][player_id]["team_color"] = self.team_color[team]
-                self.player_team_dict[player_id] = team
+            if not self._iscompleted[team]:
+                self.assign_team_color(crops[i], team)
+
+            # if player_id in self.player_team_dict:
+            #     history_team = self.player_team_dict[player_id]
+            #     # Nếu muốn giảm check team
+            #     tracks["players"][frame_number][player_id]["team"] = history_team
+            #     tracks["players"][frame_number][player_id]["team_color"] = self.team_color[history_team]
+            #     # Check full frame
+            #     # tracks["players"][frame_number][player_id]["team"] = team
+            #     # tracks["players"][frame_number][player_id]["team_color"] = self.team_color[team]
+            #     # self.player_team_dict[player_id] = team
+            # else:
+            #     tracks["players"][frame_number][player_id]["team"] = team
+            #     tracks["players"][frame_number][player_id]["team_color"] = self.team_color[team]
+            #     self.player_team_dict[player_id] = team
+            tracks["players"][frame_number][player_id]["team"] = team
+            tracks["players"][frame_number][player_id]["team_color"] = self.team_color[team]
     
     def resolve_goalkeepers(self, tracks):
         # Resolve goalkeeper positions based on the detected teams

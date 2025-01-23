@@ -30,6 +30,8 @@ class  SpeedAndDistance():
 
                     distance = measure_distance(start_position, end_position)
                     time_elapsed = (last_frame - frame_num) / self.frame_rate
+                    if time_elapsed == 0:
+                        time_elapsed = 1
                     speed_meteres_per_second = distance / time_elapsed
                     speed_kilometers_per_hour = speed_meteres_per_second * 3.6
  

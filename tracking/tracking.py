@@ -12,12 +12,15 @@ class Tracker:
     def __init__(self, model_path, model_keypoints_path):
         self.model = YOLO(model_path)
         self.model_keypoints = YOLO(model_keypoints_path)
+        # self.tracker = sv.ByteTrack(
+        #     track_activation_threshold=0.2,
+        #     lost_track_buffer=50,
+        #     minimum_matching_threshold=0.7,
+        #     frame_rate=50,
+        #     minimum_consecutive_frames=2
+        # )
         self.tracker = sv.ByteTrack(
-            track_activation_threshold=0.2,
             lost_track_buffer=50,
-            minimum_matching_threshold=0.7,
-            frame_rate=50,
-            minimum_consecutive_frames=2
         )
 
     def detect_frames(self, frames):
@@ -29,9 +32,12 @@ class Tracker:
         self.model.to(device=device)
         for i in range(0, len(frames), batch):
         # for i in range(0, 60, batch):
-            detection_batch = self.model.predict(frames[i:i+batch], conf=0.2, save=False)
+            detection_batch = self.model.predict(
+                frames[i:i+batch], conf=0.2, save=False, verbose=False
+                )
             detection_keypoints_batch = self.model_keypoints.predict(
-                                        frames[i:i+batch], conf=0.3, save=False)
+                                        frames[i:i+batch], conf=0.3, save=False, verbose=False
+                                        )
             detections += detection_batch
             detections_keypoints += detection_keypoints_batch
         return detections, detections_keypoints
