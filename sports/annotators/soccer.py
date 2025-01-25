@@ -11,7 +11,8 @@ def draw_pitch(
     config: SoccerPitchConfiguration,
     background_color: sv.Color = sv.Color(86, 196, 86),
     line_color: sv.Color = sv.Color.WHITE,
-    padding: int = 50,
+    # padding: int = 50,
+    padding: int = 0,
     line_thickness: int = 4,
     point_radius: int = 8,
     scale: float = 0.1
@@ -38,7 +39,7 @@ def draw_pitch(
     Returns:
         np.ndarray: Image of the soccer pitch.
     """
-    all_points = []
+    # all_points = []
 
     scaled_width = int(config.width * scale)
     scaled_length = int(config.length * scale)
@@ -51,13 +52,17 @@ def draw_pitch(
         dtype=np.uint8
     ) * np.array(background_color.as_bgr(), dtype=np.uint8)
 
+    # Chuyển nền sang trong suốt
+    # alpha_channel = np.full((scaled_width + 2 * padding, scaled_length + 2 * padding, 3), 0, dtype=np.uint8)
+    # pitch_image = np.stack((pitch_image, alpha_channel))
+
     for start, end in config.edges:
         point1 = (int(config.vertices[start - 1][0] * scale) + padding,
                   int(config.vertices[start - 1][1] * scale) + padding)
         point2 = (int(config.vertices[end - 1][0] * scale) + padding,
                   int(config.vertices[end - 1][1] * scale) + padding)
-        all_points.append(point1)
-        all_points.append(point2)
+        # all_points.append(point1)
+        # all_points.append(point2)
         cv2.line(
             img=pitch_image,
             pt1=point1,
@@ -97,15 +102,15 @@ def draw_pitch(
             thickness=-1
         )
 
-    points_array = np.array(all_points)
-    x_min = np.min(points_array[:, 0])
-    y_min = np.min(points_array[:, 1])
-    x_max = np.max(points_array[:, 0])
-    y_max = np.max(points_array[:, 1])
+    # points_array = np.array(all_points)
+    # x_min = np.min(points_array[:, 0])
+    # y_min = np.min(points_array[:, 1])
+    # x_max = np.max(points_array[:, 0])
+    # y_max = np.max(points_array[:, 1])
 
-    cropped_image = pitch_image[y_min:y_max, x_min:x_max]
-    # return pitch_image
-    return cropped_image
+    # cropped_image = pitch_image[y_min:y_max, x_min:x_max]
+    return pitch_image
+    # return cropped_image
 
 
 def draw_points_on_pitch(
@@ -244,7 +249,8 @@ def draw_pitch_voronoi_diagram(
     team_1_color: sv.Color = sv.Color.RED,
     team_2_color: sv.Color = sv.Color.WHITE,
     opacity: float = 0.5,
-    padding: int = 50,
+    # padding: int = 50,
+    padding: int = 0,
     scale: float = 0.1,
     pitch: Optional[np.ndarray] = None
 ) -> np.ndarray:

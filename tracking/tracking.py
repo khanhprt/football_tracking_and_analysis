@@ -275,6 +275,7 @@ class Tracker:
             origin[y_position:y_position + p_h, x_position:x_position + p_w] = blended
 
             return origin
+        
         new_width = int(frame_pitch.shape[1] // 2)
         new_height = int(frame_pitch.shape[0] // 2)
         new_size = (new_width, new_height)

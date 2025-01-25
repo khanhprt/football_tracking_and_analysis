@@ -11,7 +11,7 @@ sudo apt-get update && sudo apt-get install python3-venv
 echo "Khởi tạo môi trường ảo myenv"
 python3 -m venv myenv
 # Kích hoạt môi trường ảo
-source myenv/bin/activate
+source /home/user/myenv/bin/activate
 
 # Tạo 1 thư mục
 mkdir /home/user/football-ai
