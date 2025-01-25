@@ -14,14 +14,14 @@ python3 -m venv myenv
 source myenv/bin/activate
 
 # Tạo 1 thư mục
-mkdir ~/football-ai
-cd ~/football-ai
+mkdir /home/$USER/football-ai
+cd /home/$USER/football-ai
 
 # clone file từ git vào thư mục vừa tạo
 git clone https://github.com/khanhprt/football-project-v1.git
 
 # chuyển sang thư mục project
-cd football-project-v1
+cd /home/$USER/football-ai/football-project-v1
 
 # cài đặt các phụ thuộc cần thiết
 pip install -r requirements.txt
@@ -38,7 +38,7 @@ fi
 # Tải yolov8x-football.pt từ drive
 FILE_URL_MODEL_FB="https://drive.google.com/uc?id=1JS8hpKHkERWGEsIQK7UPCg16O_5IFRmN"
 FILE_NAME_MODEL_FB="yolov8x-football.pt"
-INPUT_DIR_MODEL_FB="/models"
+INPUT_DIR_MODEL_FB="/home/$USER/football-ai/football-project-v1/models"
 
 # Kiểm tra nếu chưa tồn tại thì tạo mới
 if [ ! -d "$INPUT_DIR_MODEL_FB" ]; then
@@ -53,7 +53,7 @@ echo "Tải model thành công! Model sẽ được lưu trong thư mục models
 # Tải key_points_pitch_ver2.pt từ drive
 FILE_URL_MODEL_KP="https://drive.google.com/uc?id=1ul_FCU03J2PYiup-WTgcW5YcUHlDrmLY"
 FILE_NAME_MODEL_KP="key_points_pitch_ver2.pt"
-INPUT_DIR_MODEL_KP="/models"
+INPUT_DIR_MODEL_KP="/home/$USER/football-ai/football-project-v1/models"
 
 # Kiểm tra nếu chưa tồn tại thì tạo mới
 if [ ! -d "$INPUT_DIR_MODEL_KP" ]; then
@@ -69,7 +69,7 @@ echo "Tải model thành công! Model sẽ được lưu trong thư mục models
 # Tải video outputs từ drive
 FILE_URL="https://drive.google.com/uc?id=12TqauVZ9tLAv8kWxTTBFWtgt2hNQ4_ZF"
 FILE_NAME="0bfacc_0.mp4"
-INPUT_DIR="/inputs"
+INPUT_DIR="/home/$USER/football-ai/football-project-v1/inputs"
 
 # Kiểm tra nếu chưa tồn tại thì tạo mới
 if [ ! -d "$INPUT_DIR" ]; then

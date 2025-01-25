@@ -7,6 +7,12 @@ import numpy as np
 import supervision as sv
 import gc
 from utils.calculator import *
+from sports.configs.soccer import SoccerPitchConfiguration
+from sports.annotators.soccer import (
+    draw_pitch,
+    draw_points_on_pitch,
+    draw_pitch_voronoi_diagram
+)
 
 class Tracker:
     def __init__(self, model_path, model_keypoints_path):
@@ -22,6 +28,8 @@ class Tracker:
         self.tracker = sv.ByteTrack(
             lost_track_buffer=50,
         )
+        self.CONFIG = SoccerPitchConfiguration()
+        self.draw_pitch = draw_pitch(self.CONFIG)
 
     def detect_frames(self, frames):
         detections = []
@@ -130,6 +138,7 @@ class Tracker:
 
         for frame_number, frame in enumerate(frames):
             frame = frame.copy()
+            frame_pitch = self.draw_pitch.copy()
 
             player_dict = tracks["players"][frame_number]
             ball_dict = tracks["ball"][frame_number]
@@ -141,6 +150,9 @@ class Tracker:
                     continue
                 color = player.get("team_color", (0, 0, 255))
                 frame = self.draw_ellipse(frame, player["bbox"], color, track_id)
+
+                point = player.get("position_transformed", (0,0))
+                frame_pitch = self.draw_point_map(frame_pitch, point, color)
 
                 if player.get("has_control", False):
                     frame = self.draw_traingle(frame, player["bbox"], (0, 0, 255))
@@ -158,6 +170,7 @@ class Tracker:
                 frame = self.draw_traingle(frame, ball["bbox"], (0, 255, 0))
             
             frame = self.draw_team_ball_control(frame, frame_number, team_ball_control)
+            frame = self.draw_add_map(frame, frame_pitch)
 
             output_video_frames.append(frame)
         return output_video_frames
@@ -232,6 +245,45 @@ class Tracker:
 
         return frame
     
+    def draw_point_map(self, frame, point, color):
+        # point = track_data["position_transformed"]
+        # color = track_data["team_color"]
+        cv2.circle(frame, (int(point[0]/10), int(point[1]/10)), 20, color, -1)
+        # if track_data["team"] == 1:
+        #     team1_xy.append(point)
+        #     team1_color = sv.Color.from_rgb_tuple(color)
+        # elif track_data["team"] == 2:
+        #     team2_xy.append(point)
+        #     team2_color = sv.Color.from_rgb_tuple(color)
+        return frame
+    
+    def draw_add_map(self, frame, frame_pitch):
+        def add_pitch_image(origin: np.ndarray, pitch_frame: np.ndarray):
+            o_h, o_w = origin.shape[:2]
+            p_h, p_w = pitch_frame.shape[:2]
+
+            x_position = (o_w - p_w) //2
+            y_position = (o_h - p_h)
+            overlay = origin[y_position:y_position + p_h, x_position:x_position + p_w]
+            # Kết hợp ảnh nhỏ với ảnh lớn, với độ mờ:
+            alpha_small = 0.5  # Độ mờ của ảnh nhỏ (0 là hoàn toàn trong suốt, 1 là hoàn toàn không trong suốt)
+            alpha_large = 1 - alpha_small  # Độ mờ của ảnh lớn
+
+            blended = cv2.addWeighted(overlay, alpha_large, pitch_frame, alpha_small, 0)
+
+
+            origin[y_position:y_position + p_h, x_position:x_position + p_w] = blended
+
+            return origin
+        new_width = int(frame_pitch.shape[1] // 2)
+        new_height = int(frame_pitch.shape[0] // 2)
+        new_size = (new_width, new_height)
+
+        # Resize ảnh
+        resized_image = cv2.resize(frame_pitch, new_size, interpolation=cv2.INTER_AREA)
+        image = add_pitch_image(frame, resized_image)
+        return image
+
     def release(self):
         del self.model
         del self.model_keypoints

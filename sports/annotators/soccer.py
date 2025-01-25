@@ -9,7 +9,7 @@ from sports.configs.soccer import SoccerPitchConfiguration
 
 def draw_pitch(
     config: SoccerPitchConfiguration,
-    background_color: sv.Color = sv.Color(34, 139, 34),
+    background_color: sv.Color = sv.Color(86, 196, 86),
     line_color: sv.Color = sv.Color.WHITE,
     padding: int = 50,
     line_thickness: int = 4,
@@ -38,6 +38,8 @@ def draw_pitch(
     Returns:
         np.ndarray: Image of the soccer pitch.
     """
+    all_points = []
+
     scaled_width = int(config.width * scale)
     scaled_length = int(config.length * scale)
     scaled_circle_radius = int(config.centre_circle_radius * scale)
@@ -54,6 +56,8 @@ def draw_pitch(
                   int(config.vertices[start - 1][1] * scale) + padding)
         point2 = (int(config.vertices[end - 1][0] * scale) + padding,
                   int(config.vertices[end - 1][1] * scale) + padding)
+        all_points.append(point1)
+        all_points.append(point2)
         cv2.line(
             img=pitch_image,
             pt1=point1,
@@ -93,7 +97,15 @@ def draw_pitch(
             thickness=-1
         )
 
-    return pitch_image
+    points_array = np.array(all_points)
+    x_min = np.min(points_array[:, 0])
+    y_min = np.min(points_array[:, 1])
+    x_max = np.max(points_array[:, 0])
+    y_max = np.max(points_array[:, 1])
+
+    cropped_image = pitch_image[y_min:y_max, x_min:x_max]
+    # return pitch_image
+    return cropped_image
 
 
 def draw_points_on_pitch(
