@@ -80,7 +80,7 @@ for object, object_track in tracks.items():
                 team2_color = sv.Color.from_rgb_tuple(color)
 
 
-        print(pitch_frame.shape)
+        # print(pitch_frame.shape)
         new_width = int(pitch_frame.shape[1] // 2)
         new_height = int(pitch_frame.shape[0] // 2)
         new_size = (new_width, new_height)

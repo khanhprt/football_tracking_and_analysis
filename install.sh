@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Kiểm tra quyền sudo
 if [ "$EUID" -ne 0 ]; then
     echo "Bạn cần phải có quyền root để chạy script này."
@@ -24,7 +26,7 @@ git clone https://github.com/khanhprt/football-project-v1.git
 cd /home/user/football-ai/football-project-v1
 
 # cài đặt các phụ thuộc cần thiết
-pip install -r requirements.txt
+sudo pip install -r requirements.txt
 
 # yes | pip uninstall opencv-python
 # pip install opencv-python-headless
