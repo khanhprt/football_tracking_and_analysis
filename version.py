@@ -71,7 +71,7 @@ for object, object_track in tracks.items():
                 continue
             point = track_data["position_transformed"]
             color = track_data["team_color"]
-            cv2.circle(pitch_frame, (int(point[0]/10), int(point[1]/10)), 20, color, -1)
+            # cv2.circle(pitch_frame, (int(point[0]/10), int(point[1]/10)), 20, color, -1)
             if track_data["team"] == 1:
                 team1_xy.append((int(point[0]/10), int(point[1]/10)))
                 team1_color = sv.Color.from_rgb_tuple(color)
@@ -87,22 +87,22 @@ for object, object_track in tracks.items():
 
 
         # Resize ảnh
-        resized_image = cv2.resize(pitch_frame, new_size, interpolation=cv2.INTER_AREA)
-        image = add_pitch_image(frames[frame_number], resized_image)
-        output_frames.append(image)
+        # resized_image = cv2.resize(pitch_frame, new_size, interpolation=cv2.INTER_AREA)
+        # image = add_pitch_image(frames[frame_number], resized_image)
+        # output_frames.append(image)
 
-        cv2.imshow("Pitch Frame", image)
-        cv2.waitKey(10)
-        # voronoi_image = draw_pitch_voronoi_diagram(
-        #     CONFIG,
-        #     team_1_xy=np.array(team1_xy),
-        #     team_2_xy=np.array(team2_xy),
-        #     team_1_color=team1_color,
-        #     team_2_color=team2_color,
-        #     pitch=pitch_frame
-        # )
-        # cv2.imshow("Voronoi Diagram", voronoi_image)
-        # cv2.waitKey(1)
+        # cv2.imshow("Pitch Frame", image)
+        # cv2.waitKey(10)
+        voronoi_image = draw_pitch_voronoi_diagram(
+            CONFIG,
+            team_1_xy=np.array(team1_xy),
+            team_2_xy=np.array(team2_xy),
+            team_1_color=team1_color,
+            team_2_color=team2_color,
+            pitch=pitch_frame
+        )
+        cv2.imshow("Voronoi Diagram", voronoi_image)
+        cv2.waitKey(0)
 
 
 

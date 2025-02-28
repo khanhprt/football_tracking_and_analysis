@@ -84,7 +84,7 @@ def process(video_path, model_path="models/yolov8x-football.pt",
     output_video_frames = speed_and_distance.draw_speed_and_distance(output_video_frames, tracks)
 
     # output_path = "./outputs/output.avi"
-    output_path = video_path.replace("inputs", "outputs").replace(".mp4", ".avi")
+    output_path = video_path.replace("inputs", "outputs").replace(".mp4", ".mp4")
 
 
     with open("./outputs/output_frames.pkl", "wb") as f:
