@@ -26,10 +26,10 @@ git clone https://github.com/khanhprt/football-project-v1.git
 cd /home/user/football-ai/football-project-v1
 
 # cài đặt các phụ thuộc cần thiết
-sudo pip install -r requirements.txt
+/home/user/myenv/bin/pip install -r requirements.txt
 
-# yes | pip uninstall opencv-python
-# pip install opencv-python-headless
+yes | /home/user/myenv/bin/pip uninstall opencv-python
+/home/user/myenv/bin/pip install opencv-python-headless
 
 # Cài đặt gdown nếu chưa có
 if ! command -v gdown &> /dev/null; then
@@ -44,7 +44,7 @@ INPUT_DIR_MODEL_FB="/home/user/football-ai/football-project-v1/models"
 
 # Kiểm tra nếu chưa tồn tại thì tạo mới
 if [ ! -d "$INPUT_DIR_MODEL_FB" ]; then
-    mkdir "$INPUT_DIR_MODEL_FB" ]
+    mkdir "$INPUT_DIR_MODEL_FB"
 fi
 
 # Tải file từ Google Drive
@@ -59,7 +59,7 @@ INPUT_DIR_MODEL_KP="/home/user/football-ai/football-project-v1/models"
 
 # Kiểm tra nếu chưa tồn tại thì tạo mới
 if [ ! -d "$INPUT_DIR_MODEL_KP" ]; then
-    mkdir "$INPUT_DIR_MODEL_KP" ]
+    mkdir "$INPUT_DIR_MODEL_KP"
 fi
 
 # Tải file từ Google Drive

@@ -1,4 +1,6 @@
 import cv2
+import pickle
+import os
 
 def read_video(video_path):
     cap = cv2.VideoCapture(video_path)
@@ -16,7 +18,7 @@ def read_video(video_path):
 
 def write_video(output_path, out_put_frame):
     # fourcc = cv2.VideoWriter_fourcc(*'XVID')
-    fourcc = cv2.VideoWriter_fourcc(*'X264')
+    fourcc = cv2.VideoWriter_fourcc(*'avc1')
     out = cv2.VideoWriter(output_path, fourcc, 24, (out_put_frame[0].shape[1], out_put_frame[0].shape[0]))
     for i in range(len(out_put_frame)):
         out.write(out_put_frame[i])
@@ -26,4 +28,10 @@ def write_video(output_path, out_put_frame):
 
     # cv2.destroyAllWindows()
     out.release()
+
+def save_pkl(name, value):
+
+    os.makedirs("./outputs/", exist_ok=True)
+    with open(f"./outputs/{name}", "wb") as f:
+        pickle.dump(value, f)
 
