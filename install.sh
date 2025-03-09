@@ -69,8 +69,8 @@ echo "Tải model thành công! Model sẽ được lưu trong thư mục models
 
 
 # Tải video outputs từ drive
-FILE_URL="https://drive.google.com/uc?id=12TqauVZ9tLAv8kWxTTBFWtgt2hNQ4_ZF"
-FILE_NAME="0bfacc_0.mp4"
+FILE_URL="https://drive.google.com/uc?id=1RDTNqZMxbZIOYGRaBaUYz6R2d07QG3vH"
+FILE_NAME="ok_798b45_0.mp4"
 INPUT_DIR="/home/user/football-ai/football-project-v1/inputs"
 
 # Kiểm tra nếu chưa tồn tại thì tạo mới

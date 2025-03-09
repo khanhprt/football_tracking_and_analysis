@@ -16,31 +16,30 @@ def process(video_path, model_path="models/yolov8x-football.pt",
 
     frames = read_video(video_path)
 
+    tracker = Tracker(model_path, model_keypoints_path)
+    camera_movement = CameraMovement(frames[0])
+    speed_and_distance = SpeedAndDistance()
+
     if load_pkl:
         with open("./outputs/tracks.pkl", "rb") as f:
             tracks = pickle.load(f)
     else:
-        tracker = Tracker(model_path, model_keypoints_path)
-
         tracks = tracker.get_object_tracks(frames)
-
         tracker.add_position_to_tracks(tracks)
 
     if load_pkl:
         with open("./outputs/camera_movement_frames.pkl", "rb") as f:
             camera_movement = pickle.load(f)
     else:   
-        camera_movement = CameraMovement(frames[0])
         camera_movement_frames = camera_movement.get_camera_movement(frames)
-
         camera_movement.add_camera_movement_to_tracks(tracks, camera_movement_frames)
+
     if not load_pkl:
         transformer = Transformer()
         transformer.add_transformed_point(tracks)
 
         tracks["ball"] = tracker.interpolate_ball_position(tracks["ball"])
 
-        speed_and_distance = SpeedAndDistance()
         speed_and_distance.add_speed_and_distance_to_tracks(tracks)
 
         team_assigner = TeamAssigner()
@@ -84,8 +83,14 @@ def process(video_path, model_path="models/yolov8x-football.pt",
         save_pkl("tracks.pkl", tracks)
         save_pkl("team_ball_control.pkl", team_ball_control)
         save_pkl("camera_movement_frames.pkl", camera_movement_frames)
+    
+    option_frames = {
+        "circle": [],
+        "voronoi": [],
+        "line": []
+    }
         
-    output_video_frames = tracker.draw_annotation(frames, tracks, team_ball_control)
+    output_video_frames = tracker.draw_annotation(frames, tracks, team_ball_control, option_frames)
 
     output_video_frames = camera_movement.draw_camera_movement(output_video_frames, camera_movement_frames)
 
