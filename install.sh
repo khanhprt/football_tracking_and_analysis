@@ -6,6 +6,8 @@ if [ "$EUID" -ne 0 ]; then
     exit 1
 fi
 
+sudo chmod -R 777 /home/user/
+
 # Cài đặt thư viện venv cho ubuntu
 sudo apt-get update && sudo apt-get install python3-venv
 

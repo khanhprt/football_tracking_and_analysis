@@ -5,7 +5,6 @@ from transformer.transformer import *
 from speed_and_distance.speed_and_distance import *
 from team_assigner.team_assigner import *
 from player_ball_assigner.player_ball_assigner import *
-# from flask import Flask, request, jsonify
 import os
 import pickle
 
@@ -100,30 +99,19 @@ def process(video_path, model_path="models/yolov8x-football.pt",
     output_path = video_path.replace("inputs", "outputs").replace(".mp4", ".mp4")
 
     write_video(output_path, output_video_frames)
+    write_video(
+        output_path.replace(".mp4", "_circle.mp4"),
+        option_frames["circle"]
+    )
+    write_video(
+        output_path.replace(".mp4", "_voronoi.mp4"),
+        option_frames["voronoi"]
+    )
+    write_video(
+        output_path.replace(".mp4", "_line.mp4"),
+        option_frames["line"]
+    )
     return output_path, tracks
-
-# app = Flask(__name__)
-
-# @app.route('/api/upload', methods=['POST'])
-# def echo():
-#     if "video" not in request.files:
-#         return "No video uploaded", 400
-    
-#     video_data = request.files['video']
-
-#     if video_data.filename == "":
-#         return "No video uploaded", 400
-    
-#     video_path = os.path.jon("./input", video_data.filename)
-#     video_data.save(video_path)
-
-#     output_path, tracks = process(video_path)
-
-#     re_data = {
-#         "output": output_path,
-#         "tracks": tracks
-#     }
-#     return jsonify(re_data)
 
 if __name__ == "__main__":
     # app.run(host="0.0.0.0",debug=True)
