@@ -31,7 +31,7 @@ cd /home/user/football-ai/football-project-v1
 /home/user/myenv/bin/pip install -r requirements.txt
 
 yes | /home/user/myenv/bin/pip uninstall opencv-python
-/home/user/myenv/bin/pip install opencv-python-headless
+# /home/user/myenv/bin/pip install opencv-python-headless
 
 # Cài đặt gdown nếu chưa có
 if ! command -v gdown &> /dev/null; then
@@ -114,3 +114,6 @@ make -j$(nproc)
 
 # Cài đặt OpenCV
 sudo make install
+
+yes | /home/user/myenv/bin/pip uninstall numpy -y
+/home/user/myenv/bin/pip install "numpy<2"

@@ -118,4 +118,4 @@ if __name__ == "__main__":
     video_path = "./inputs/ok_798b45_0.mp4"
 
     # Chú ý thông số load_pkl, lần đầu để False để tạo file .pkl, lần sau là True để đọc file .pkl
-    output_path, tracks = process(video_path, load_pkl=False)
+    output_path, tracks = process(video_path, load_pkl=True)
