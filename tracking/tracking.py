@@ -143,6 +143,7 @@ class Tracker:
     
     def draw_annotation(self, frames, tracks, team_ball_control, option_frames):
         output_video_frames = []
+        path_raw = []
 
         for frame_number, frame in enumerate(frames):
             frame = frame.copy()
@@ -159,7 +160,7 @@ class Tracker:
             team2_color = None
 
             frame_pitch_line = self.draw_pitch.copy()
-            path_raw = []
+            
 
             # Draw players
             for track_id, player in player_dict.items():
@@ -207,16 +208,14 @@ class Tracker:
                 team_2_color=team2_color,
                 pitch=frame_pitch_voronoid
             )
+            print(path_raw)
             frame_line = self.draw_line_ball(path_raw, frame_pitch_line)
 
             output_video_frames.append(frame)
             option_frames["circle"].append(frame_pitch)
             option_frames["voronoi"].append(frame_voronoi)
+            option_frames["line"].append(frame_line)
 
-            if frame_line != None:
-                option_frames["line"].append(frame_line)
-            else:
-                option_frames["line"].append(frame_pitch_line)
 
         return output_video_frames
     
@@ -334,9 +333,12 @@ class Tracker:
         image = frame_pitch_line.copy()
         for i in range(len(path_raw) - 1):
                 # Lấy tọa độ 2 điểm liền kề
+                
                 point1 = (int(path_raw[i][0]), int(path_raw[i][1]))
                 point2 = (int(path_raw[i + 1][0]), int(path_raw[i + 1][1]))
-                
+                print(point1)
+                print(point2)
+
                 # Vẽ đoạn thẳng màu đỏ, độ dày 2
                 cv2.line(image, point1, point2, (0, 0, 255), 2)
         return image

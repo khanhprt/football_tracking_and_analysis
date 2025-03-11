@@ -99,19 +99,26 @@ def process(video_path, model_path="models/yolov8x-football.pt",
     output_path = video_path.replace("inputs", "outputs").replace(".mp4", ".mp4")
 
     write_video(output_path, output_video_frames)
+
+    circle_path = output_path.replace(".mp4", "_circle.mp4")
+    voronoi_path = output_path.replace(".mp4", "_voronoi.mp4")
+    line_path = output_path.replace(".mp4", "_line.mp4")
+
+    path_backend = [output_path, circle_path, voronoi_path, line_path]
+
     write_video(
-        output_path.replace(".mp4", "_circle.mp4"),
+        circle_path,
         option_frames["circle"]
     )
     write_video(
-        output_path.replace(".mp4", "_voronoi.mp4"),
+        voronoi_path,
         option_frames["voronoi"]
     )
     write_video(
-        output_path.replace(".mp4", "_line.mp4"),
+        line_path,
         option_frames["line"]
     )
-    return output_path, tracks
+    return path_backend, tracks
 
 if __name__ == "__main__":
     # app.run(host="0.0.0.0",debug=True)

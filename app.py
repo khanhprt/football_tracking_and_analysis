@@ -179,7 +179,10 @@ def upload_video():
 
     return jsonify({
         "message": "Video uploaded successfully!",
-        "processed_video_path": processed_video_path,
+        "main_video": processed_video_path[0],
+        "circle_video": processed_video_path[1],
+        "voronoi_video": processed_video_path[2],
+        "line_video": processed_video_path[3],
         "data": data
     }), 200
 

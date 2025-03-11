@@ -8,3 +8,8 @@ scikit-learn
 tqdm
 sentencepiece
 protobuf
+flask
+flask-sqlalchemy
+PyJWT
+flask-cors
+werkzeug
