@@ -28,7 +28,7 @@ def process(video_path, model_path="models/yolov8x-football.pt",
 
     if load_pkl:
         with open("./outputs/camera_movement_frames.pkl", "rb") as f:
-            camera_movement = pickle.load(f)
+            camera_movement_frames = pickle.load(f)
     else:   
         camera_movement_frames = camera_movement.get_camera_movement(frames)
         camera_movement.add_camera_movement_to_tracks(tracks, camera_movement_frames)
@@ -88,7 +88,7 @@ def process(video_path, model_path="models/yolov8x-football.pt",
         "voronoi": [],
         "line": []
     }
-        
+    
     output_video_frames = tracker.draw_annotation(frames, tracks, team_ball_control, option_frames)
 
     output_video_frames = camera_movement.draw_camera_movement(output_video_frames, camera_movement_frames)
