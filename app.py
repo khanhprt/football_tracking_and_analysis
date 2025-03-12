@@ -9,6 +9,7 @@ from flask_cors import CORS
 import cv2, json
 from ultralytics import YOLO
 from main import process
+from temp.json_export import *
 
 app = Flask(__name__)
 
@@ -125,7 +126,7 @@ def process_video_with_yolo(video_path):
 
 def process_ai_football(video_path):
     path, tracks = process(video_path)
-    data = json.dumps(tracks)
+    data = clear(tracks)
     return data, path
 
 # Route đăng nhập
