@@ -73,10 +73,10 @@ for object, object_track in tracks.items():
             color = track_data["team_color"]
             # cv2.circle(pitch_frame, (int(point[0]/10), int(point[1]/10)), 20, color, -1)
             if track_data["team"] == 1:
-                team1_xy.append((int(point[0]/10), int(point[1]/10)))
+                team1_xy.append((int(point[0]), int(point[1])))
                 team1_color = sv.Color.from_rgb_tuple(color)
             elif track_data["team"] == 2:
-                team2_xy.append((int(point[0]/10), int(point[1]/10)))
+                team2_xy.append((int(point[0]), int(point[1])))
                 team2_color = sv.Color.from_rgb_tuple(color)
 
 
@@ -101,8 +101,10 @@ for object, object_track in tracks.items():
             team_2_color=team2_color,
             pitch=pitch_frame
         )
-        cv2.imshow("Voronoi Diagram", voronoi_image)
-        cv2.waitKey(0)
+        # cv2.imshow("Voronoi Diagram", voronoi_image)
+        # cv2.waitKey(0)
+        cv2.imwrite("voronoi_diagram.jpg", voronoi_image)
+
 
 
 

@@ -40,5 +40,5 @@ tracks = clear(tracks)
 tracks = convert_numpy(tracks)
 
 json_string = json.dumps(tracks, indent=4)  # indent=4 để dễ đọc
-print(jsonify(tracks))
+print(json_string)
 

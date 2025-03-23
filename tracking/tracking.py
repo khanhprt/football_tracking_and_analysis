@@ -156,6 +156,8 @@ class Tracker:
             frame_pitch_voronoid = self.draw_pitch.copy()
             team1_xy = []
             team2_xy = []
+            team1_xy_voronoi = []
+            team2_xy_voronoi = []
             team1_color = None
             team2_color = None
 
@@ -178,9 +180,11 @@ class Tracker:
                 # cv2.circle(pitch_frame, (int(point[0]/10), int(point[1]/10)), 20, color, -1)
                 if player["team"] == 1:
                     team1_xy.append((int(point[0]/10), int(point[1]/10)))
+                    team1_xy_voronoi.append((int(point[0]), int(point[1])))
                     team1_color = sv.Color.from_rgb_tuple(color)
                 elif player["team"] == 2:
                     team2_xy.append((int(point[0]/10), int(point[1]/10)))
+                    team2_xy_voronoi.append((int(point[0]), int(point[1])))
                     team2_color = sv.Color.from_rgb_tuple(color)
 
             
@@ -202,8 +206,8 @@ class Tracker:
             # frame = self.draw_add_map(frame, frame_pitch)
             frame_voronoi = draw_pitch_voronoi_diagram(
                 self.CONFIG,
-                team_1_xy=np.array(team1_xy),
-                team_2_xy=np.array(team2_xy),
+                team_1_xy=np.array(team1_xy_voronoi),
+                team_2_xy=np.array(team2_xy_voronoi),
                 team_1_color=team1_color,
                 team_2_color=team2_color,
                 pitch=frame_pitch_voronoid
