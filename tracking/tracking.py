@@ -265,13 +265,14 @@ class Tracker:
         y2_rect = int((y2 + rectangle_height//2) + 15)
 
         if track_id is not None:
+            true_id = SETUP_ID.get(int(track_id), track_id)
             cv2.rectangle(frame, (x1_rect, y1_rect), (x2_rect, y2_rect), color, cv2.FILLED)
 
             x1_text = int(x1_rect + 12)
             y1_text = int(y1_rect + 15)
             
             cv2.putText(frame, 
-                        f"{track_id}",
+                        f"{true_id}",
                         (x1_text, y1_text),
                         cv2.FONT_HERSHEY_COMPLEX,
                         0.6,

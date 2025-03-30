@@ -3,7 +3,7 @@ from tracking.tracking import *
 from camera_movement.camera_movement import *
 from transformer.transformer import *
 from speed_and_distance.speed_and_distance import *
-from team_assigner.team_assigner import *
+# from team_assigner.team_assigner import *
 from player_ball_assigner.player_ball_assigner import *
 import os
 import pickle
@@ -41,14 +41,14 @@ def process(video_path, model_path="models/yolov8x-football.pt",
 
         speed_and_distance.add_speed_and_distance_to_tracks(tracks)
 
-        team_assigner = TeamAssigner()
-        team_assigner.assign_team_classifier(frames, tracks)
+        # team_assigner = TeamAssigner()
+        # team_assigner.assign_team_classifier(frames, tracks)
 
-        for frame_number, player_track in enumerate(tracks["players"]):
-            team_assigner.get_player_crops(frames[frame_number], 
-                                            player_track, 
-                                            frame_number, 
-                                            tracks)
+        # for frame_number, player_track in enumerate(tracks["players"]):
+        #     team_assigner.get_player_crops(frames[frame_number], 
+        #                                     player_track, 
+        #                                     frame_number, 
+        #                                     tracks)
     
     if load_pkl:
         with open(f"./outputs/team_ball_control.pkl", "rb") as f:
@@ -74,7 +74,7 @@ def process(video_path, model_path="models/yolov8x-football.pt",
 
         # Giải phóng bộ nhớ
         tracker.release()
-        team_assigner.release()
+        # team_assigner.release()
 
         # os.makedirs("./outputs/", exist_ok=True)
         # with open("./outputs/tracks.pkl", "wb") as f:
@@ -96,9 +96,14 @@ def process(video_path, model_path="models/yolov8x-football.pt",
     output_video_frames = speed_and_distance.draw_speed_and_distance(output_video_frames, tracks)
 
     # output_path = "./outputs/output.avi"
+    # output_path = video_path.replace("inputs", "outputs").replace(".mp4", ".avi")
     output_path = video_path.replace("inputs", "outputs").replace(".mp4", ".mp4")
 
     write_video(output_path, output_video_frames)
+
+    # circle_path = output_path.replace(".avi", "_circle.avi")
+    # voronoi_path = output_path.replace(".avi", "_voronoi.avi")
+    # line_path = output_path.replace(".avi", "_line.avi")
 
     circle_path = output_path.replace(".mp4", "_circle.mp4")
     voronoi_path = output_path.replace(".mp4", "_voronoi.mp4")

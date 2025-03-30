@@ -10,15 +10,15 @@ def read_video(video_path):
         ret, frame = cap.read()
         if not ret:
             break
-        if count > 150:
-            break
+        # if count > 150:
+        #     break
         count += 1
         frames.append(frame)
     return frames
 
 def write_video(output_path, out_put_frame):
-    # fourcc = cv2.VideoWriter_fourcc(*'XVID')
-    fourcc = cv2.VideoWriter_fourcc(*'avc1')
+    fourcc = cv2.VideoWriter_fourcc(*'XVID')
+    # fourcc = cv2.VideoWriter_fourcc(*'avc1')
     out = cv2.VideoWriter(output_path, fourcc, 24, (out_put_frame[0].shape[1], out_put_frame[0].shape[0]))
     for i in range(len(out_put_frame)):
         out.write(out_put_frame[i])

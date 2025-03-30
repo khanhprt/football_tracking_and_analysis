@@ -1,3 +1,7 @@
+SETUP_ID = {
+    56:2, 60:4, 50:7, 58:15, 179:36, 244:15, 280:5, 278:9, 242:43, 247:43, 392:367
+}
+
 
 def measure_distance(point1, point2):
     return ((point1[0] - point2[0]) ** 2 + (point1[1] - point2[1]) ** 2) ** 0.5
