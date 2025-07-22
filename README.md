@@ -1,7 +1,5 @@
 # ⚽ Football Tracking and Analysis System
 
-![Project Banner](https://github.com/khanhprt/football_tracking_and_analysis/raw/main/docs/banner.png)
-
 A comprehensive computer vision solution for automated football match analysis with player tracking, tactical insights, and performance metrics.
 
 ## ✨ Key Features
